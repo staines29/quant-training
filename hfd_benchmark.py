@@ -19,3 +19,4 @@ elapsed_time_b = end_time_b - start_time_b
 print("numpy vectorized time:", elapsed_time_b)
 speedup = elapsed_time_a / elapsed_time_b
 print(f"speedup:{speedup:.2f}x")
+print(f"numpy is {speedup:.2f} times faster than python loop")
