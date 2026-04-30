@@ -34,11 +34,23 @@ strategy_return = df_clean['Strategy_Return'].mean() * 252
 strategy_volatility = df_clean['Strategy_Return'].std() * np.sqrt(252)
 strategy_sharpe = strategy_return / strategy_volatility
 #print 
-print(f"Market Sharpe: {market_sharpe:.2f}")
-print(f"Strategy Sharpe: {strategy_sharpe:.2f}")
+#print(f"Market Sharpe: {market_sharpe:.2f}")
+#print(f"Strategy Sharpe: {strategy_sharpe:.2f}")
 
-df_clean[['Market_Growth', 'Strategy_Growth']].plot(figsize=(10, 6))
-plt.title('Market Growth vs Strategy Growth')
+df_clean['SMA_20'] = df_clean['Close'].rolling(window=20).mean()
+df_clean['Std_Dev'] = df_clean['Close'].rolling(window=20).std()
+df_clean['Upper_Band'] = df_clean['SMA_20'] + (2 * df_clean['Std_Dev'])
+df_clean['Lower_Band'] = df_clean['SMA_20'] - (2 * df_clean['Std_Dev'])
+df_clean['Bollinger_Signal'] = np.where(df_clean['Close'] > df_clean['Upper_Band'], -1,
+                                         np.where(df_clean['Close'] < df_clean['Lower_Band'], 1, 0))
+df_clean[['Close', 'SMA_20', 'Upper_Band', 'Lower_Band']].plot(figsize=(10, 6))
+plt.title('Bollinger Bands')
 plt.xlabel('Date')
-plt.ylabel('Growth')
+plt.ylabel('Price')
 plt.show()
+
+#df_clean[['Market_Growth', 'Strategy_Growth']].plot(figsize=(10, 6))
+#plt.title('Market Growth vs Strategy Growth')
+#plt.xlabel('Date')
+#plt.ylabel('Growth')
+#plt.show()
